@@ -48,71 +48,102 @@ export default function Register() {
     }
   }
 return (
-  <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light ">
-    <div className="row w-100 justify-content-center">
-      <div className="col-lg-5 col-md-7 col-sm-10">
-        <div className="card shadow-lg border-0 rounded-4 m-5">
-          <div className="card-body p-4">
-
-            <h3 className="text-center mb-4 fw-bold">
-              Registro
-            </h3>
+  <div className="app-shell d-flex align-items-center">
+    <div className="container page-section">
+      <div className="row justify-content-center">
+        <div className="col-xl-6 col-lg-7 col-md-9">
+          <div className="page-card p-4 p-md-5">
+            <div className="d-flex align-items-center gap-3 mb-4">
+              <span className="icon-pill">
+                <i className="bi bi-person-plus" />
+              </span>
+              <div>
+                <p className="hero-badge mb-2">
+                  <i className="bi bi-stars" />
+                  Bienvenida suave
+                </p>
+                <h3 className="page-title fw-bold mb-1">Registro</h3>
+                <p className="page-subtitle mb-0">Crea tu cuenta con una interfaz más amable y limpia.</p>
+              </div>
+            </div>
 
             <form onSubmit={handleSubmit}>
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <label className="form-label">Nombre</label>
+                  <div className="input-group input-group-lg">
+                    <span className="input-group-text bg-white border-0">
+                      <i className="bi bi-person-vcard" />
+                    </span>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg"
+                      name="nombre"
+                      value={form.nombre}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
 
-              <div className="mb-3">
-                <label className="form-label fw-semibold">Nombre</label>
-                <input
-                  type="text"
-                  className="form-control form-control-lg"
-                  name="nombre"
-                  value={form.nombre}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+                <div className="col-md-6">
+                  <label className="form-label">Usuario</label>
+                  <div className="input-group input-group-lg">
+                    <span className="input-group-text bg-white border-0">
+                      <i className="bi bi-at" />
+                    </span>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg"
+                      name="username"
+                      value={form.username}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
 
-              <div className="mb-3">
-                <label className="form-label fw-semibold">Usuario</label>
-                <input
-                  type="text"
-                  className="form-control form-control-lg"
-                  name="username"
-                  value={form.username}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+                <div className="col-12">
+                  <label className="form-label">Correo electrónico</label>
+                  <div className="input-group input-group-lg">
+                    <span className="input-group-text bg-white border-0">
+                      <i className="bi bi-envelope" />
+                    </span>
+                    <input
+                      type="email"
+                      className="form-control form-control-lg"
+                      name="correo"
+                      value={form.correo}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
 
-              <div className="mb-3">
-                <label className="form-label fw-semibold">Correo electrónico</label>
-                <input
-                  type="email"
-                  className="form-control form-control-lg"
-                  name="correo"
-                  value={form.correo}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="form-label fw-semibold">Contraseña</label>
-                <input
-                  type="password"
-                  className="form-control form-control-lg"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  required
-                />
+                <div className="col-12">
+                  <label className="form-label">Contraseña</label>
+                  <div className="input-group input-group-lg">
+                    <span className="input-group-text bg-white border-0">
+                      <i className="bi bi-shield-lock" />
+                    </span>
+                    <input
+                      type="password"
+                      className="form-control form-control-lg"
+                      name="password"
+                      value={form.password}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
               </div>
 
               <button
                 type="submit"
-                className="btn btn-primary btn-lg w-100"
+                className="btn btn-pastel-primary btn-lg w-100 mt-4"
                 disabled={loading}
               >
+                <i className="bi bi-heart-fill me-2" />
                 {loading ? "Registrando..." : "Registrarse"}
               </button>
 
@@ -127,9 +158,7 @@ return (
                   {success}
                 </div>
               )}
-
             </form>
-
           </div>
         </div>
       </div>
