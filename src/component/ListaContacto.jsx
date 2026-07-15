@@ -431,6 +431,165 @@ function ListaContactos() {
 
       <h4 className="mb-3">Mis Contactos</h4>
 
+      {loading && <p>Cargando contactos...</p>}
+      {error && <div className="alert alert-danger">{error}</div>}
+      {!loading && !error && contactos.length === 0 && (
+        <p>No tienes contactos todavía.</p>
+      )}
+
+      {contactos.map((contacto) => (
+        <div className="card mb-3 p-3" key={contacto.id}>
+          {editandoId === contacto.id ? (
+            <>
+              <input
+                type="text"
+                className="form-control mb-2"
+                name="nombre"
+                value={contactoEditado.nombre || ""}
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                className="form-control mb-2"
+                name="telefono"
+                value={contactoEditado.telefono || ""}
+                onChange={handleChange}
+              />
+              <input
+                type="email"
+                className="form-control mb-2"
+                name="email"
+                value={contactoEditado.email || ""}
+                onChange={handleChange}
+              />
+              <button
+                className="btn btn-success btn-sm me-2"
+                onClick={guardarCambios}
+              >
+                Guardar
+              </button>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => setEditandoId(null)}
+              >
+                Cancelar
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="mb-1"><strong>Nombre:</strong> {contacto.nombre}</p>
+              <p className="mb-1"><strong>Teléfono:</strong> {contacto.telefono}</p>
+              <p className="mb-1"><strong>Email:</strong> {contacto.email}</p>
+
+              <div>
+                <button
+                  className="btn btn-primary btn-sm me-2"
+                  onClick={() => iniciarEdicion(contacto)}
+                >
+                  Editar
+                </button>
+                <button
+                  className="btn btn-danger btn-sm me-2"
+                  onClick={() => handleEliminar(contacto.id)}
+                >
+                  Eliminar
+                </button>
+                <button
+                  className="btn btn-outline-secondary btn-sm"
+                  onClick={() => toggleExpandido(contacto.id)}
+                >
+                  {expandidoId === contacto.id ? "Ocultar redes" : "Ver redes"}
+                </button>
+              </div>
+
+              {expandidoId === contacto.id && (
+                <div className="mt-3">
+                  <h6>Redes sociales</h6>
+
+                  {(contacto.redes || []).map((red) => (
+                    <div key={red.id} className="d-flex align-items-center mb-2">
+                      <span className="me-2">{obtenerIcono(red.tipo)}</span>
+
+                      {editandoRedId === red.id ? (
+                        <>
+                          <input
+                            type="text"
+                            className="form-control form-control-sm me-2"
+                            value={redEditada.enlace}
+                            onChange={handleRedEditChange}
+                          />
+                          <button
+                            className="btn btn-success btn-sm me-1"
+                            onClick={guardarRedEditada}
+                          >
+                            Guardar
+                          </button>
+                          <button
+                            className="btn btn-secondary btn-sm"
+                            onClick={() => setEditandoRedId(null)}
+                          >
+                            Cancelar
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <a href={red.enlace} target="_blank" rel="noreferrer" className="me-2">
+                            {red.enlace}
+                          </a>
+                          <button
+                            className="btn btn-outline-primary btn-sm me-1"
+                            onClick={() => iniciarEdicionRed(red, contacto.id)}
+                          >
+                            Editar
+                          </button>
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => handleEliminarRed(red.id, contacto.id)}
+                          >
+                            Eliminar
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  ))}
+
+                  <div className="d-flex align-items-center mt-2">
+                    <select
+                      className="form-select form-select-sm me-2"
+                      style={{ width: "auto" }}
+                      name="tipo"
+                      value={nuevaRed.tipo}
+                      onChange={handleRedChange}
+                    >
+                      <option value="INSTAGRAM">Instagram</option>
+                      <option value="FACEBOOK">Facebook</option>
+                      <option value="TWITTER">Twitter</option>
+                      <option value="LINKEDIN">LinkedIn</option>
+                      <option value="GITHUB">GitHub</option>
+                      <option value="YOUTUBE">YouTube</option>
+                    </select>
+                    <input
+                      type="text"
+                      placeholder="URL"
+                      className="form-control form-control-sm me-2"
+                      name="enlace"
+                      value={nuevaRed.enlace}
+                      onChange={handleRedChange}
+                    />
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => guardarRed(contacto.id)}
+                    >
+                      Añadir
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      ))}
+
     </div>
 
   );
