@@ -1,48 +1,50 @@
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function CustomNavbar() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const location = useLocation();
+
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
+  useEffect(() => {
+    setToken(localStorage.getItem("token"));
+  }, [location]);
 
   const cerrarSesion = () => {
     localStorage.removeItem("token");
+    setToken(null);
     navigate("/login");
   };
 
   return (
-    <Navbar expand="lg" className="pastel-navbar py-3">
+    <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
         <Navbar.Brand
-          className="d-flex align-items-center gap-2 fw-bold"
           style={{ cursor: "pointer" }}
           onClick={() => navigate("/home")}
         >
-          <span className="icon-pill">
-            <i className="bi bi-stars" />
-          </span>
           Agenda
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse className="justify-content-end">
-          <Nav className="nav-actions align-items-lg-center">
+          <Nav>
             {!token ? (
               <>
                 <Button
                   variant="outline-light"
-                  className="btn-pastel-soft"
+                  className="me-2"
                   onClick={() => navigate("/login")}
                 >
-                  <i className="bi bi-box-arrow-in-right me-2" />
                   Login
                 </Button>
 
                 <Button
-                  className="btn-pastel-primary"
+                  variant="primary"
                   onClick={() => navigate("/registro")}
                 >
-                  <i className="bi bi-person-plus me-2" />
                   Registro
                 </Button>
               </>
@@ -50,18 +52,16 @@ function CustomNavbar() {
               <>
                 <Button
                   variant="outline-light"
-                  className="btn-pastel-soft"
+                  className="me-2"
                   onClick={() => navigate("/home")}
                 >
-                  <i className="bi bi-house-heart me-2" />
                   Home
                 </Button>
 
                 <Button
-                  className="btn-pastel-danger"
+                  variant="danger"
                   onClick={cerrarSesion}
                 >
-                  <i className="bi bi-box-arrow-right me-2" />
                   Cerrar Sesión
                 </Button>
               </>

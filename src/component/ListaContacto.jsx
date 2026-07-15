@@ -1,18 +1,47 @@
-import { useEffect, useState } from "react";
-import { obtenerContactos } from "../service/contacto";
+import { useEffect, useState, Fragment } from "react";
+import {
+  obtenerContactos,
+  modificarContacto,
+  eliminarContacto,
+} from "../service/contacto";
+
+import { añadirRed, modificarRed, eliminarRed } from "../service/red";
+
 import {
   obtenerUsuario,
   actualizarUsuario,
-  eliminarUsuario,
+  eliminarUsuario
 } from "../service/usuario";
 
 function ListaContactos() {
+
   const [contactos, setContactos] = useState([]);
-  const [cargando, setCargando] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [usuario, setUsuario] = useState(null);
+  const [errorUsuario, setErrorUsuario] = useState("");
+
   const [editandoUsuario, setEditandoUsuario] = useState(false);
   const [passwordEliminar, setPasswordEliminar] = useState("");
+
+  const [editandoId, setEditandoId] = useState(null);
+  const [contactoEditado, setContactoEditado] = useState({});
+
+  const [expandidoId, setExpandidoId] = useState(null);
+
+  const [nuevaRed, setNuevaRed] = useState({
+    tipo: "INSTAGRAM",
+    enlace: ""
+  });
+
+  const [editandoRedId, setEditandoRedId] = useState(null);
+
+  const [redEditada, setRedEditada] = useState({
+    id: null,
+    idContacto: null,
+    enlace: ""
+  });
 
   useEffect(() => {
     cargarContactos();
@@ -20,71 +49,99 @@ function ListaContactos() {
   }, []);
 
   async function cargarUsuario() {
+
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
 
     if (!username) {
-      setError("No hay username guardado");
-      setCargando(false);
+      setErrorUsuario("No hay username guardado");
       return;
     }
 
     try {
+
       const data = await obtenerUsuario(username, token);
       setUsuario(data);
-    } catch {
-      setError("Error al cargar usuario");
+
+    } catch (e) {
+
+      setErrorUsuario("Error al cargar usuario");
+
     }
+
   }
 
   async function cargarContactos() {
+
     try {
+
       const data = await obtenerContactos();
       setContactos(data);
-    } catch {
+
+    } catch (e) {
+
       setError("No se pudieron cargar los contactos");
+
     } finally {
-      setCargando(false);
+
+      setLoading(false);
+
     }
+
   }
 
   function handleUsuarioChange(e) {
+
     setUsuario({
       ...usuario,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
+
   }
 
   async function actualizarDatosUsuario() {
+
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
 
     try {
+
       const actualizado = await actualizarUsuario(
         username,
         {
           nombre: usuario.nombre,
-          correo: usuario.correo,
+          correo: usuario.correo
         },
         token
       );
 
       setUsuario(actualizado);
       setEditandoUsuario(false);
+
       alert("Usuario actualizado correctamente");
-    } catch {
+
+    } catch (e) {
+
       alert("Error al actualizar usuario");
+
     }
+
   }
 
   async function eliminarCuenta() {
+
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
 
     if (!window.confirm("¿Seguro que deseas eliminar tu cuenta?")) return;
 
     try {
-      await eliminarUsuario(username, { password: passwordEliminar }, token);
+
+      await eliminarUsuario(
+        username,
+        { password: passwordEliminar },
+        token
+      );
 
       alert("Cuenta eliminada");
 
@@ -92,33 +149,211 @@ function ListaContactos() {
       localStorage.removeItem("username");
 
       window.location.href = "/login";
-    } catch {
+
+    } catch (e) {
+
       alert("Password incorrecta o error");
+
     }
+
+  }
+
+  function iniciarEdicion(contacto) {
+
+    setEditandoId(contacto.id);
+    setContactoEditado(contacto);
+
+  }
+
+  function handleChange(e) {
+
+    setContactoEditado({
+      ...contactoEditado,
+      [e.target.name]: e.target.value
+    });
+
+  }
+
+  async function guardarCambios() {
+
+    try {
+
+      await modificarContacto(contactoEditado);
+
+      alert("Contacto modificado correctamente");
+
+      setEditandoId(null);
+      cargarContactos();
+
+    } catch (e) {
+
+      alert("Error al modificar");
+
+    }
+
+  }
+
+  async function handleEliminar(id) {
+
+    if (!window.confirm("¿Seguro que deseas eliminar este contacto?")) return;
+
+    try {
+
+      await eliminarContacto(id);
+
+      alert("Contacto eliminado correctamente");
+
+      cargarContactos();
+
+    } catch (e) {
+
+      alert("Error al eliminar");
+
+    }
+
+  }
+
+  function toggleExpandido(id) {
+
+    setExpandidoId(expandidoId === id ? null : id);
+
+  }
+
+  function handleRedChange(e) {
+
+    setNuevaRed({
+      ...nuevaRed,
+      [e.target.name]: e.target.value
+    });
+
+  }
+
+  async function guardarRed(idContacto) {
+
+    if (!nuevaRed.enlace.trim()) {
+
+      alert("Debes ingresar una URL");
+      return;
+
+    }
+
+    try {
+
+      await añadirRed({
+        idContacto: idContacto,
+        tipo: nuevaRed.tipo,
+        enlace: nuevaRed.enlace
+      });
+
+      alert("Red añadida correctamente");
+
+      setNuevaRed({ tipo: "INSTAGRAM", enlace: "" });
+
+      cargarContactos();
+
+    } catch (e) {
+
+      alert("Error al añadir red");
+
+    }
+
+  }
+
+  function iniciarEdicionRed(red, idContacto) {
+
+    setEditandoRedId(red.id);
+
+    setRedEditada({
+      id: red.id,
+      idContacto: idContacto,
+      enlace: red.enlace
+    });
+
+  }
+
+  function handleRedEditChange(e) {
+
+    setRedEditada({
+      ...redEditada,
+      enlace: e.target.value
+    });
+
+  }
+
+  async function guardarRedEditada() {
+
+    try {
+
+      await modificarRed(redEditada);
+
+      alert("Red modificada correctamente");
+
+      setEditandoRedId(null);
+
+      cargarContactos();
+
+    } catch (e) {
+
+      alert("Error al modificar red");
+
+    }
+
+  }
+
+  async function handleEliminarRed(idRed, idContacto) {
+
+    if (!window.confirm("¿Eliminar esta red?")) return;
+
+    try {
+
+      await eliminarRed({
+        id: idRed,
+        idContacto: idContacto
+      });
+
+      alert("Red eliminada correctamente");
+
+      cargarContactos();
+
+    } catch (e) {
+
+      alert("Error al eliminar red");
+
+    }
+
+  }
+
+  function obtenerIcono(tipo) {
+
+    switch (tipo) {
+      case "FACEBOOK": return "📘";
+      case "INSTAGRAM": return "📷";
+      case "TWITTER": return "🐦";
+      case "LINKEDIN": return "💼";
+      case "GITHUB": return "💻";
+      case "YOUTUBE": return "▶";
+      default: return "🌐";
+    }
+
   }
 
   return (
-    <div className="container page-section pt-0">
-      {error && <div className="alert alert-warning mb-4">{error}</div>}
+
+    <div className="container mt-4">
 
       {usuario && (
-        <div className="user-card mb-4 p-4">
-          <div className="d-flex align-items-center gap-3 mb-3">
-            <span className="icon-pill">
-              <i className="bi bi-person-heart" />
-            </span>
-            <div>
-              <h5 className="page-title fw-bold mb-1">Usuario</h5>
-              <p className="page-subtitle mb-0">Gestiona tus datos de cuenta con un panel más limpio.</p>
-            </div>
-          </div>
 
-          <p><span className="muted-label">Username</span><br />{usuario.username}</p>
+        <div className="card mb-4 p-3">
+
+          <h5>Usuario</h5>
+
+          <p><strong>Username:</strong> {usuario.username}</p>
 
           {editandoUsuario ? (
+
             <>
               <div className="mb-2">
-                <label className="form-label">Nombre</label>
+                <label>Nombre</label>
                 <input
                   type="text"
                   name="nombre"
@@ -129,7 +364,7 @@ function ListaContactos() {
               </div>
 
               <div className="mb-2">
-                <label className="form-label">Correo</label>
+                <label>Correo</label>
                 <input
                   type="email"
                   name="correo"
@@ -140,72 +375,66 @@ function ListaContactos() {
               </div>
 
               <button
-                className="btn btn-pastel-primary btn-sm me-2"
+                className="btn btn-success btn-sm me-2"
                 onClick={actualizarDatosUsuario}
               >
-                <i className="bi bi-save2 me-2" />
                 Guardar
               </button>
 
               <button
-                className="btn btn-pastel-soft btn-sm"
+                className="btn btn-secondary btn-sm"
                 onClick={() => setEditandoUsuario(false)}
               >
-                <i className="bi bi-x-lg me-2" />
                 Cancelar
               </button>
+
             </>
+
           ) : (
+
             <>
-              <p><span className="muted-label">Nombre</span><br />{usuario.nombre}</p>
-              <p><span className="muted-label">Correo</span><br />{usuario.correo}</p>
+              <p><strong>Nombre:</strong> {usuario.nombre}</p>
+              <p><strong>Correo:</strong> {usuario.correo}</p>
 
               <button
-                className="btn btn-pastel-primary btn-sm"
+                className="btn btn-primary btn-sm"
                 onClick={() => setEditandoUsuario(true)}
               >
-                <i className="bi bi-pencil-square me-2" />
                 Modificar datos
               </button>
             </>
+
           )}
 
-          <hr className="my-4" />
+          <hr />
 
-          <h6 className="fw-bold">Eliminar cuenta</h6>
+          <h6>Eliminar cuenta</h6>
 
           <input
             type="password"
             placeholder="Confirma tu password"
             value={passwordEliminar}
             onChange={(e) => setPasswordEliminar(e.target.value)}
-            className="form-control mb-3"
+            className="form-control mb-2"
           />
 
           <button
-            className="btn btn-pastel-danger btn-sm"
+            className="btn btn-danger btn-sm"
             onClick={eliminarCuenta}
           >
-            <i className="bi bi-trash3 me-2" />
             Eliminar cuenta
           </button>
+
         </div>
+
       )}
 
-      <div className="d-flex align-items-center justify-content-between mb-3">
-        <div>
-          <h4 className="page-title fw-bold mb-1">Mis Contactos</h4>
-          <p className="page-subtitle mb-0">Un espacio más suave para revisar y editar tu agenda.</p>
-        </div>
-        <span className="hero-badge">
-          <i className="bi bi-chat-heart" />
-          {contactos.length} contactos
-        </span>
-      </div>
+      <h4 className="mb-3">Mis Contactos</h4>
 
-      {cargando && <div className="alert alert-info">Cargando información...</div>}
     </div>
+
   );
+
 }
 
 export default ListaContactos;
