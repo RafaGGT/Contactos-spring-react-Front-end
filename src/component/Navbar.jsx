@@ -1,31 +1,25 @@
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function CustomNavbar() {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const [token, setToken] = useState(localStorage.getItem("token"));
-
-  useEffect(() => {
-    setToken(localStorage.getItem("token"));
-  }, [location]);
+  const token = localStorage.getItem("token");
 
   const cerrarSesion = () => {
     localStorage.removeItem("token");
-    setToken(null);
     navigate("/login");
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar className="app-navbar py-3" expand="lg" variant="dark">
       <Container>
         <Navbar.Brand
+          className="brand-badge"
           style={{ cursor: "pointer" }}
           onClick={() => navigate("/home")}
         >
-          Agenda
+          Agenda Contactos
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -33,35 +27,21 @@ function CustomNavbar() {
           <Nav>
             {!token ? (
               <>
-                <Button
-                  variant="outline-light"
-                  className="me-2"
-                  onClick={() => navigate("/login")}
-                >
+                <Button variant="outline-light" className="me-2 soft-btn" onClick={() => navigate("/login")}>
                   Login
                 </Button>
 
-                <Button
-                  variant="primary"
-                  onClick={() => navigate("/registro")}
-                >
+                <Button variant="primary" className="soft-btn" onClick={() => navigate("/registro")}>
                   Registro
                 </Button>
               </>
             ) : (
               <>
-                <Button
-                  variant="outline-light"
-                  className="me-2"
-                  onClick={() => navigate("/home")}
-                >
+                <Button variant="outline-light" className="me-2 soft-btn" onClick={() => navigate("/home")}>
                   Home
                 </Button>
 
-                <Button
-                  variant="danger"
-                  onClick={cerrarSesion}
-                >
+                <Button variant="danger" className="soft-btn" onClick={cerrarSesion}>
                   Cerrar Sesión
                 </Button>
               </>

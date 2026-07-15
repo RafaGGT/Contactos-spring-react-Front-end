@@ -63,7 +63,7 @@ function ListaContactos() {
       const data = await obtenerUsuario(username, token);
       setUsuario(data);
 
-    } catch (e) {
+    } catch {
 
       setErrorUsuario("Error al cargar usuario");
 
@@ -78,7 +78,7 @@ function ListaContactos() {
       const data = await obtenerContactos();
       setContactos(data);
 
-    } catch (e) {
+    } catch {
 
       setError("No se pudieron cargar los contactos");
 
@@ -120,7 +120,7 @@ function ListaContactos() {
 
       alert("Usuario actualizado correctamente");
 
-    } catch (e) {
+    } catch {
 
       alert("Error al actualizar usuario");
 
@@ -150,7 +150,7 @@ function ListaContactos() {
 
       window.location.href = "/login";
 
-    } catch (e) {
+    } catch {
 
       alert("Password incorrecta o error");
 
@@ -185,7 +185,7 @@ function ListaContactos() {
       setEditandoId(null);
       cargarContactos();
 
-    } catch (e) {
+    } catch {
 
       alert("Error al modificar");
 
@@ -205,7 +205,7 @@ function ListaContactos() {
 
       cargarContactos();
 
-    } catch (e) {
+    } catch {
 
       alert("Error al eliminar");
 
@@ -251,7 +251,7 @@ function ListaContactos() {
 
       cargarContactos();
 
-    } catch (e) {
+    } catch {
 
       alert("Error al añadir red");
 
@@ -292,7 +292,7 @@ function ListaContactos() {
 
       cargarContactos();
 
-    } catch (e) {
+    } catch {
 
       alert("Error al modificar red");
 
@@ -315,7 +315,7 @@ function ListaContactos() {
 
       cargarContactos();
 
-    } catch (e) {
+    } catch {
 
       alert("Error al eliminar red");
 
@@ -339,15 +339,22 @@ function ListaContactos() {
 
   return (
 
-    <div className="container mt-4">
+    <div className="page-container">
 
       {usuario && (
 
-        <div className="card mb-4 p-3">
+        <div className="card section-card mb-4 p-4 p-md-5">
 
-          <h5>Usuario</h5>
+          <h5 className="page-title mb-1">Usuario</h5>
+          <p className="page-lead mb-3">Actualiza tu perfil o elimina tu cuenta desde aquí.</p>
 
-          <p><strong>Username:</strong> {usuario.username}</p>
+          <p className="contact-meta"><strong>Username:</strong> {usuario.username}</p>
+
+          {errorUsuario && (
+            <div className="alert alert-warning rounded-4 mt-3">
+              {errorUsuario}
+            </div>
+          )}
 
           {editandoUsuario ? (
 
@@ -359,7 +366,7 @@ function ListaContactos() {
                   name="nombre"
                   value={usuario.nombre}
                   onChange={handleUsuarioChange}
-                  className="form-control"
+                  className="form-control soft-input"
                 />
               </div>
 
@@ -370,19 +377,19 @@ function ListaContactos() {
                   name="correo"
                   value={usuario.correo}
                   onChange={handleUsuarioChange}
-                  className="form-control"
+                  className="form-control soft-input"
                 />
               </div>
 
               <button
-                className="btn btn-success btn-sm me-2"
+                className="btn btn-success btn-sm me-2 soft-btn"
                 onClick={actualizarDatosUsuario}
               >
                 Guardar
               </button>
 
               <button
-                className="btn btn-secondary btn-sm"
+                className="btn btn-secondary btn-sm soft-btn"
                 onClick={() => setEditandoUsuario(false)}
               >
                 Cancelar
@@ -397,7 +404,7 @@ function ListaContactos() {
               <p><strong>Correo:</strong> {usuario.correo}</p>
 
               <button
-                className="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm soft-btn"
                 onClick={() => setEditandoUsuario(true)}
               >
                 Modificar datos
@@ -415,7 +422,7 @@ function ListaContactos() {
             placeholder="Confirma tu password"
             value={passwordEliminar}
             onChange={(e) => setPasswordEliminar(e.target.value)}
-            className="form-control mb-2"
+            className="form-control mb-2 soft-input"
           />
 
           <button
@@ -429,47 +436,48 @@ function ListaContactos() {
 
       )}
 
-      <h4 className="mb-3">Mis Contactos</h4>
+      <h4 className="page-title mb-2">Mis contactos</h4>
+      <p className="page-lead">Administra contactos, sus redes sociales y sus datos de forma rápida.</p>
 
-      {loading && <p>Cargando contactos...</p>}
-      {error && <div className="alert alert-danger">{error}</div>}
+      {loading && <p className="contact-meta">Cargando contactos...</p>}
+      {error && <div className="alert alert-danger rounded-4">{error}</div>}
       {!loading && !error && contactos.length === 0 && (
-        <p>No tienes contactos todavía.</p>
+        <div className="empty-state">No tienes contactos todavía.</div>
       )}
 
       {contactos.map((contacto) => (
-        <div className="card mb-3 p-3" key={contacto.id}>
+        <div className="card contact-card" key={contacto.id}>
           {editandoId === contacto.id ? (
             <>
               <input
                 type="text"
-                className="form-control mb-2"
+                className="form-control mb-2 soft-input"
                 name="nombre"
                 value={contactoEditado.nombre || ""}
                 onChange={handleChange}
               />
               <input
                 type="text"
-                className="form-control mb-2"
+                className="form-control mb-2 soft-input"
                 name="telefono"
                 value={contactoEditado.telefono || ""}
                 onChange={handleChange}
               />
               <input
                 type="email"
-                className="form-control mb-2"
+                className="form-control mb-2 soft-input"
                 name="email"
                 value={contactoEditado.email || ""}
                 onChange={handleChange}
               />
               <button
-                className="btn btn-success btn-sm me-2"
+                className="btn btn-success btn-sm me-2 soft-btn"
                 onClick={guardarCambios}
               >
                 Guardar
               </button>
               <button
-                className="btn btn-secondary btn-sm"
+                className="btn btn-secondary btn-sm soft-btn"
                 onClick={() => setEditandoId(null)}
               >
                 Cancelar
@@ -481,21 +489,21 @@ function ListaContactos() {
               <p className="mb-1"><strong>Teléfono:</strong> {contacto.telefono}</p>
               <p className="mb-1"><strong>Email:</strong> {contacto.email}</p>
 
-              <div>
+              <div className="contact-actions">
                 <button
-                  className="btn btn-primary btn-sm me-2"
+                  className="btn btn-primary btn-sm soft-btn"
                   onClick={() => iniciarEdicion(contacto)}
                 >
                   Editar
                 </button>
                 <button
-                  className="btn btn-danger btn-sm me-2"
+                  className="btn btn-danger btn-sm soft-btn"
                   onClick={() => handleEliminar(contacto.id)}
                 >
                   Eliminar
                 </button>
                 <button
-                  className="btn btn-outline-secondary btn-sm"
+                  className="btn btn-outline-secondary btn-sm soft-btn"
                   onClick={() => toggleExpandido(contacto.id)}
                 >
                   {expandidoId === contacto.id ? "Ocultar redes" : "Ver redes"}
@@ -507,25 +515,25 @@ function ListaContactos() {
                   <h6>Redes sociales</h6>
 
                   {(contacto.redes || []).map((red) => (
-                    <div key={red.id} className="d-flex align-items-center mb-2">
+                    <div key={red.id} className="d-flex align-items-center mb-2 flex-wrap gap-2">
                       <span className="me-2">{obtenerIcono(red.tipo)}</span>
 
                       {editandoRedId === red.id ? (
                         <>
                           <input
                             type="text"
-                            className="form-control form-control-sm me-2"
+                            className="form-control form-control-sm me-2 soft-input"
                             value={redEditada.enlace}
                             onChange={handleRedEditChange}
                           />
                           <button
-                            className="btn btn-success btn-sm me-1"
+                            className="btn btn-success btn-sm me-1 soft-btn"
                             onClick={guardarRedEditada}
                           >
                             Guardar
                           </button>
                           <button
-                            className="btn btn-secondary btn-sm"
+                            className="btn btn-secondary btn-sm soft-btn"
                             onClick={() => setEditandoRedId(null)}
                           >
                             Cancelar
@@ -537,13 +545,13 @@ function ListaContactos() {
                             {red.enlace}
                           </a>
                           <button
-                            className="btn btn-outline-primary btn-sm me-1"
+                            className="btn btn-outline-primary btn-sm me-1 soft-btn"
                             onClick={() => iniciarEdicionRed(red, contacto.id)}
                           >
                             Editar
                           </button>
                           <button
-                            className="btn btn-outline-danger btn-sm"
+                            className="btn btn-outline-danger btn-sm soft-btn"
                             onClick={() => handleEliminarRed(red.id, contacto.id)}
                           >
                             Eliminar
@@ -555,7 +563,7 @@ function ListaContactos() {
 
                   <div className="d-flex align-items-center mt-2">
                     <select
-                      className="form-select form-select-sm me-2"
+                      className="form-select form-select-sm me-2 soft-input"
                       style={{ width: "auto" }}
                       name="tipo"
                       value={nuevaRed.tipo}
@@ -571,13 +579,13 @@ function ListaContactos() {
                     <input
                       type="text"
                       placeholder="URL"
-                      className="form-control form-control-sm me-2"
+                      className="form-control form-control-sm me-2 soft-input"
                       name="enlace"
                       value={nuevaRed.enlace}
                       onChange={handleRedChange}
                     />
                     <button
-                      className="btn btn-primary btn-sm"
+                      className="btn btn-primary btn-sm soft-btn"
                       onClick={() => guardarRed(contacto.id)}
                     >
                       Añadir

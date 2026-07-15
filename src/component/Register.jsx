@@ -48,15 +48,19 @@ export default function Register() {
     }
   }
 return (
-  <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light ">
+  <div className="auth-shell">
     <div className="row w-100 justify-content-center">
       <div className="col-lg-5 col-md-7 col-sm-10">
-        <div className="card shadow-lg border-0 rounded-4 m-5">
-          <div className="card-body p-4">
+        <div className="card auth-card m-2 m-md-5">
+          <div className="card-body p-4 p-md-5">
 
-            <h3 className="text-center mb-4 fw-bold">
+            <h3 className="text-center mb-2 fw-bold page-title">
               Registro
             </h3>
+
+            <p className="text-center page-lead">
+              Crea tu cuenta para empezar a organizar tus contactos.
+            </p>
 
             <form onSubmit={handleSubmit}>
 
@@ -64,7 +68,7 @@ return (
                 <label className="form-label fw-semibold">Nombre</label>
                 <input
                   type="text"
-                  className="form-control form-control-lg"
+                  className="form-control form-control-lg soft-input"
                   name="nombre"
                   value={form.nombre}
                   onChange={handleChange}
@@ -76,7 +80,7 @@ return (
                 <label className="form-label fw-semibold">Usuario</label>
                 <input
                   type="text"
-                  className="form-control form-control-lg"
+                  className="form-control form-control-lg soft-input"
                   name="username"
                   value={form.username}
                   onChange={handleChange}
@@ -88,7 +92,7 @@ return (
                 <label className="form-label fw-semibold">Correo electrónico</label>
                 <input
                   type="email"
-                  className="form-control form-control-lg"
+                  className="form-control form-control-lg soft-input"
                   name="correo"
                   value={form.correo}
                   onChange={handleChange}
@@ -100,7 +104,7 @@ return (
                 <label className="form-label fw-semibold">Contraseña</label>
                 <input
                   type="password"
-                  className="form-control form-control-lg"
+                  className="form-control form-control-lg soft-input"
                   name="password"
                   value={form.password}
                   onChange={handleChange}
@@ -110,20 +114,20 @@ return (
 
               <button
                 type="submit"
-                className="btn btn-primary btn-lg w-100"
+                className="btn btn-primary btn-lg w-100 soft-btn"
                 disabled={loading}
               >
                 {loading ? "Registrando..." : "Registrarse"}
               </button>
 
               {error && (
-                <div className="alert alert-danger mt-3 text-center">
+                <div className="alert alert-danger mt-3 text-center rounded-4">
                   {error}
                 </div>
               )}
 
               {success && (
-                <div className="alert alert-success mt-3 text-center">
+                <div className="alert alert-success mt-3 text-center rounded-4">
                   {success}
                 </div>
               )}

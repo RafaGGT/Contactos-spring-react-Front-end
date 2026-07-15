@@ -42,14 +42,18 @@ export default function Login() {
     }
 
     return (
-        <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+        <div className="auth-shell">
         <div className="col-lg-4 col-md-6 col-sm-10">
-            <div className="card shadow-lg border-0 rounded-4">
-            <div className="card-body p-4">
+            <div className="card auth-card">
+            <div className="card-body p-4 p-md-5">
 
-                <h3 className="text-center fw-bold mb-4">
+                <h3 className="text-center fw-bold mb-2 page-title">
                 Iniciar sesión
                 </h3>
+
+                <p className="text-center page-lead">
+                Accede a tu agenda para gestionar contactos y redes.
+                </p>
 
                 <form onSubmit={handleSubmit}>
 
@@ -57,7 +61,7 @@ export default function Login() {
                     <label className="form-label fw-semibold">Usuario</label>
                     <input
                     type="text"
-                    className="form-control form-control-lg"
+                    className="form-control form-control-lg soft-input"
                     name="username"
                     value={form.username}
                     onChange={handleChange}
@@ -69,7 +73,7 @@ export default function Login() {
                     <label className="form-label fw-semibold">Contraseña</label>
                     <input
                     type="password"
-                    className="form-control form-control-lg"
+                    className="form-control form-control-lg soft-input"
                     name="password"
                     value={form.password}
                     onChange={handleChange}
@@ -79,14 +83,14 @@ export default function Login() {
 
                 <button
                     type="submit"
-                    className="btn btn-primary btn-lg w-100"
+                    className="btn btn-primary btn-lg w-100 soft-btn"
                     disabled={loading}
                 >
                     {loading ? "Ingresando..." : "Ingresar"}
                 </button>
 
                 {error && (
-                    <div className="alert alert-danger mt-3 text-center">
+                    <div className="alert alert-danger mt-3 text-center rounded-4">
                     {error}
                     </div>
                 )}

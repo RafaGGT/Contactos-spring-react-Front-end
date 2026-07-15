@@ -25,7 +25,7 @@ function CrearContacto() {
     setLoading(true);
 
     try {
-      const location = await crearContacto(formData);
+      await crearContacto(formData);
 
       // Opcional: limpiar formulario
       setFormData({
@@ -35,7 +35,7 @@ function CrearContacto() {
       });
 
     
-    } catch (err) {
+    } catch {
       setError("No se pudo crear el contacto");
     } finally {
       setLoading(false);
@@ -43,13 +43,16 @@ function CrearContacto() {
   };
 
   return (
-    <div className="container mt-4">
-      <div className="card shadow">
-        <div className="card-body">
-          <h5 className="card-title mb-3">Nuevo Contacto</h5>
+    <div className="page-container">
+      <div className="card section-card">
+        <div className="card-header-hero">
+          <h5 className="page-title mb-1">Nuevo contacto</h5>
+          <p className="page-lead mb-0">Registra personas, teléfonos y correo en un solo lugar.</p>
+        </div>
+        <div className="card-body p-4 p-md-5 pt-3">
 
           {error && (
-            <div className="alert alert-danger" role="alert">
+            <div className="alert alert-danger rounded-4" role="alert">
               {error}
             </div>
           )}
@@ -59,7 +62,7 @@ function CrearContacto() {
               <label className="form-label">Nombre</label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control soft-input"
                 name="nombre"
                 value={formData.nombre}
                 onChange={handleChange}
@@ -71,7 +74,7 @@ function CrearContacto() {
               <label className="form-label">Teléfono</label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control soft-input"
                 name="telefono"
                 value={formData.telefono}
                 onChange={handleChange}
@@ -83,7 +86,7 @@ function CrearContacto() {
               <label className="form-label">Email</label>
               <input
                 type="email"
-                className="form-control"
+                className="form-control soft-input"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
@@ -92,7 +95,7 @@ function CrearContacto() {
 
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-primary soft-btn"
               disabled={loading}
             >
               {loading ? "Guardando..." : "Crear Contacto"}
